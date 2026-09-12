@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banquet Hall — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon: #4a1420;
+    --maroon-dark: #2a0b13;
+    --gold: #cba135;
+    --gold-light: #e8cd7a;
+    --ivory: #f8f3e9;
+    --ink: #221812;
+    --teal: #0f3d3e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Jost', sans-serif;
+    color:var(--ink);
+    background:var(--ivory);
+    overflow-x:hidden;
+  }
+  h1,h2,h3{ font-family:'Cormorant Garamond', serif; font-weight:600; }
+  a{ text-decoration:none; color:inherit; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 28px; }
+
+  /* ---------- Demo ribbon ---------- */
+  .demo-badge{
+    position:fixed; top:14px; right:-46px; z-index:999;
+    background:var(--gold); color:var(--maroon-dark);
+    font-family:'Jost',sans-serif; font-size:12px; letter-spacing:.06em;
+    font-weight:600; padding:6px 52px; transform:rotate(40deg);
+    box-shadow:0 2px 10px rgba(0,0,0,.25);
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px; background:transparent;
+    transition:background .4s ease, box-shadow .4s ease, padding .4s ease;
+  }
+  .topbar.solid{
+    background:rgba(42,11,19,.94); backdrop-filter:blur(6px);
+    box-shadow:0 2px 18px rgba(0,0,0,.25); padding:12px 28px;
+  }
+  .topbar .brand{ font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ivory); letter-spacing:.02em;}
+  .topbar .brand small{ display:block; font-family:'Jost',sans-serif; font-size:10px; letter-spacing:.2em; color:var(--gold-light); }
+  .topbar nav{ display:flex; gap:26px; }
+  .topbar nav a{ color:var(--ivory); font-size:14px; opacity:.85; }
+  .topbar nav a:hover{ opacity:1; }
+  .topbar .call-btn{
+    border:1px solid var(--gold); color:var(--gold-light); padding:8px 18px;
+    font-size:13px; border-radius:2px; letter-spacing:.02em;
+  }
+  @media (max-width:760px){ .topbar nav{ display:none; } }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--maroon-dark); overflow:hidden;
+  }
+  .hero-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:.34; filter:saturate(85%) contrast(105%);
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, rgba(42,11,19,.35) 0%, rgba(42,11,19,.92) 78%);
+  }
+  .hero-content{ position:relative; z-index:2; text-align:center; padding:0 24px; }
+
+  .arch-frame{ width:min(560px,86vw); margin:0 auto 8px; }
+  .arch-frame path{
+    fill:none; stroke:var(--gold); stroke-width:1.4;
+    stroke-dasharray:1400; stroke-dashoffset:1400;
+    animation:draw 2.6s ease forwards .3s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  .hero-urdu{
+    font-size:15px; letter-spacing:.05em; color:var(--gold-light);
+    opacity:0; transform:translateY(10px);
+    animation:fadeUp .9s ease forwards 1.7s;
+  }
+  .hero h1{
+    color:var(--ivory); font-size:clamp(40px,7vw,74px); line-height:1.05; margin:10px 0 6px;
+    opacity:0; transform:translateY(16px);
+    animation:fadeUp 1s ease forwards 1.9s;
+  }
+  .hero .tagline{
+    color:var(--gold-light); font-size:clamp(14px,2vw,18px); letter-spacing:.08em;
+    font-weight:300; opacity:0; transform:translateY(12px);
+    animation:fadeUp 1s ease forwards 2.15s;
+  }
+  @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+
+  .hero-meta{
+    margin-top:34px; display:flex; gap:22px; justify-content:center; flex-wrap:wrap;
+    opacity:0; animation:fadeUp 1s ease forwards 2.4s;
+  }
+  .hero-meta span{ color:var(--ivory); font-size:14px; opacity:.85; display:flex; align-items:center; gap:7px;}
+  .stars{ color:var(--gold); letter-spacing:1px; }
+
+  .hero-cta{
+    margin-top:36px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    opacity:0; animation:fadeUp 1s ease forwards 2.6s;
+  }
+  .btn{
+    display:inline-block; padding:14px 30px; font-size:14px; letter-spacing:.03em;
+    border-radius:2px; transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-gold{ background:var(--gold); color:var(--maroon-dark); font-weight:500; }
+  .btn-gold:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(203,161,53,.35); }
+  .btn-ghost{ border:1px solid var(--gold-light); color:var(--gold-light); }
+  .btn-ghost:hover{ background:rgba(232,205,122,.08); transform:translateY(-2px); }
+
+  .scroll-cue{
+    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+    width:1px; height:46px; background:linear-gradient(var(--gold-light), transparent);
+    opacity:.6;
+  }
+
+  /* ---------- Section shell ---------- */
+  section{ padding:96px 0; }
+  .section-ivory{ background:var(--ivory); }
+  .section-dark{ background:var(--maroon-dark); color:var(--ivory); }
+  .eyebrow-rule{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .eyebrow-rule .line{ height:1px; width:44px; background:var(--gold); position:relative; overflow:hidden; }
+  .eyebrow-rule .line::after{
+    content:""; position:absolute; inset:0; width:40%;
+    background:linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    animation:shimmer 3.4s ease-in-out infinite;
+  }
+  @keyframes shimmer{ 0%{transform:translateX(-120%);} 60%{transform:translateX(320%);} 100%{transform:translateX(320%);} }
+  .eyebrow-rule span{ font-size:13px; letter-spacing:.14em; color:var(--gold); }
+  .section-dark .eyebrow-rule span{ color:var(--gold-light); }
+
+  h2.title{ font-size:clamp(30px,4vw,44px); max-width:600px; margin-bottom:26px; }
+
+  /* ---------- About ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:60px; align-items:center; }
+  .about-grid p{ font-size:17px; line-height:1.75; color:#3a2c22; max-width:52ch; }
+  .about-figure{ position:relative; }
+  .about-figure img{ border-radius:2px; }
+  .about-figure::before{
+    content:""; position:absolute; top:-16px; left:-16px; right:16px; bottom:16px;
+    border:1px solid var(--gold); z-index:-1;
+  }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; } .about-figure{ order:-1; } }
+
+  /* ---------- Amenities ---------- */
+  .amenities-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(248,243,233,.15); }
+  .amenity{
+    background:var(--maroon-dark); padding:34px 26px; display:flex; flex-direction:column; gap:14px;
+  }
+  .amenity svg{ width:30px; height:30px; stroke:var(--gold); }
+  .amenity span{ font-size:15px; color:var(--ivory); opacity:.92; }
+  @media (max-width:700px){ .amenities-grid{ grid-template-columns:repeat(2,1fr);} }
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:130px; gap:10px;
+  }
+  .gallery-grid img{ width:100%; height:100%; object-fit:cover; border-radius:2px; }
+  .gallery-grid a:nth-child(1){ grid-column:span 2; grid-row:span 2; }
+  .gallery-grid a:nth-child(4){ grid-column:span 2; }
+  .gallery-grid a:nth-child(5){ grid-row:span 2; }
+  .gallery-grid a{ overflow:hidden; display:block; }
+  .gallery-grid img{ transition:transform .5s ease; }
+  .gallery-grid a:hover img{ transform:scale(1.06); }
+  @media (max-width:760px){
+    .gallery-grid{ grid-template-columns:repeat(2,1fr); grid-auto-rows:150px; }
+    .gallery-grid a:nth-child(1){ grid-column:span 2; }
+  }
+
+  /* ---------- Packages ---------- */
+  .pkg-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .pkg-card{
+    position:relative; background:#fff; padding:44px 30px 34px;
+    clip-path:polygon(0 22px, 50% 0, 100% 22px, 100% 100%, 0 100%);
+    border:1px solid rgba(74,20,32,.12); text-align:center;
+  }
+  .pkg-card.featured{ background:var(--maroon); color:var(--ivory); transform:translateY(-14px); box-shadow:0 24px 44px rgba(42,11,19,.28); }
+  .pkg-card .note{ font-size:12px; letter-spacing:.1em; color:var(--gold); text-transform:uppercase; }
+  .pkg-card.featured .note{ color:var(--gold-light); }
+  .pkg-card h3{ font-size:30px; margin:8px 0 2px; }
+  .pkg-card .price{ font-size:16px; color:#6b5240; margin-bottom:20px; }
+  .pkg-card.featured .price{ color:var(--gold-light); }
+  .pkg-card ul{ list-style:none; text-align:left; display:flex; flex-direction:column; gap:11px; }
+  .pkg-card li{ font-size:14.5px; padding-left:20px; position:relative; }
+  .pkg-card li::before{ content:"—"; position:absolute; left:0; color:var(--gold); }
+  @media (max-width:860px){ .pkg-grid{ grid-template-columns:1fr; } .pkg-card.featured{ transform:none; } }
+
+  /* ---------- Testimonials ---------- */
+  .test-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .test-card{ background:#fff; padding:30px 26px; border-left:2px solid var(--gold); }
+  .test-card .stars{ margin-bottom:12px; display:block; }
+  .test-card p{ font-size:15px; line-height:1.65; color:#3a2c22; margin-bottom:16px; }
+  .test-card .name{ font-size:13px; letter-spacing:.05em; color:#6b5240; }
+  @media (max-width:860px){ .test-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Location ---------- */
+  .loc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center; }
+  .loc-info p{ font-size:15px; line-height:1.8; margin-bottom:6px; opacity:.9; }
+  .loc-info .label{ color:var(--gold-light); font-size:12px; letter-spacing:.1em; margin-top:18px; display:block; }
+  .map-box{
+    height:280px; border:1px solid rgba(232,205,122,.35); display:flex; align-items:center; justify-content:center;
+    background:rgba(232,205,122,.05); position:relative;
+  }
+  .map-box svg{ width:44px; height:44px; stroke:var(--gold-light); }
+  @media (max-width:860px){ .loc-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Inquiry ---------- */
+  .inquiry-box{
+    max-width:640px; margin:0 auto; background:#fff; padding:44px; border:1px solid rgba(74,20,32,.12);
+    text-align:center;
+  }
+  .inquiry-box p{ color:#5a463a; margin-bottom:24px; font-size:15px; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  input, textarea{
+    width:100%; padding:13px 14px; border:1px solid #d9cdb8; font-family:'Jost',sans-serif; font-size:14px;
+    background:var(--ivory); color:var(--ink);
+  }
+  textarea{ resize:none; height:90px; margin-bottom:18px; }
+  input:focus, textarea:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  @media (max-width:600px){ .field-row{ grid-template-columns:1fr; } }
+
+  /* ---------- Footer ---------- */
+  footer{ background:var(--maroon-dark); color:var(--ivory); padding:40px 0 26px; text-align:center; }
+  footer .brand{ font-family:'Cormorant Garamond',serif; font-size:22px; margin-bottom:10px; }
+  footer .disclaimer{
+    margin-top:22px; padding-top:18px; border-top:1px solid rgba(232,205,122,.18);
+    font-size:12px; opacity:.55; letter-spacing:.02em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-badge">PROTOTYPE PREVIEW</div>
+
+<div class="topbar" id="topbar">
+  <div class="brand" id="tb-brand">— <small id="tb-brand-sub">BANQUET HALL</small></div>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#packages">Packages</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#visit">Visit</a>
+  </nav>
+  <a class="call-btn" id="tb-call" href="#">Call Now</a>
+</div>
+
+<section class="hero">
+  <img class="hero-img" id="hero-img" src="" alt="">
+  <div class="hero-content">
+    <svg class="arch-frame" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20,300 L20,150 C20,70 90,20 200,20 C310,20 380,70 380,150 L380,300" />
+    </svg>
+    <div class="hero-urdu" id="hero-urdu"></div>
+    <h1 id="hero-name"></h1>
+    <div class="tagline" id="hero-tagline"></div>
+    <div class="hero-meta">
+      <span class="stars" id="hero-stars"></span>
+      <span id="hero-reviews"></span>
+      <span id="hero-hours"></span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-gold" id="hero-whatsapp" href="#" target="_blank" rel="noopener">Enquire on WhatsApp</a>
+      <a class="btn btn-ghost" href="#gallery">View Gallery</a>
+    </div>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<section class="section-ivory" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow-rule"><div class="line"></div><span>OUR STORY</span></div>
+      <h2 class="title" id="about-title"></h2>
+      <p id="about-text"></p>
+    </div>
+    <div class="about-figure">
+      <img id="about-img" src="" alt="Hall interior">
+    </div>
+  </div>
+</section>
+
+<section class="section-dark">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span>FACILITIES</span></div>
+    <h2 class="title">Everything the evening needs</h2>
+  </div>
+  <div class="amenities-grid" id="amenities-grid"></div>
+</section>
+
+<section class="section-ivory" id="gallery">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span>GALLERY</span></div>
+    <h2 class="title">A hall built for the biggest nights</h2>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</section>
+
+<section class="section-ivory" id="packages" style="background:#f2ece0;">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span>PACKAGES</span></div>
+    <h2 class="title">Choose your evening</h2>
+    <div class="pkg-grid" id="pkg-grid"></div>
+  </div>
+</section>
+
+<section class="section-ivory" id="reviews">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span>GUEST REVIEWS</span></div>
+    <h2 class="title" id="review-title"></h2>
+    <div class="test-grid" id="test-grid"></div>
+  </div>
+</section>
+
+<section class="section-dark" id="visit">
+  <div class="wrap loc-grid">
+    <div class="loc-info">
+      <div class="eyebrow-rule"><div class="line"></div><span>VISIT US</span></div>
+      <h2 class="title" id="loc-title">Plan your visit</h2>
+      <span class="label">ADDRESS</span>
+      <p id="loc-address"></p>
+      <span class="label">HOURS</span>
+      <p id="loc-hours"></p>
+      <span class="label">PHONE</span>
+      <p id="loc-phone"></p>
+      <div style="margin-top:26px;">
+        <a class="btn btn-gold" id="loc-directions" href="#" target="_blank" rel="noopener">Get Directions</a>
+      </div>
+    </div>
+    <a class="map-box" id="loc-map" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+    </a>
+  </div>
+</section>
+
+<section class="section-ivory">
+  <div class="wrap">
+    <div class="inquiry-box">
+      <div class="eyebrow-rule" style="justify-content:center;"><div class="line"></div><span>ENQUIRE</span></div>
+      <h2 class="title" style="margin:0 auto 8px;">Check your date</h2>
+      <p>Tell us about your event and we'll reply on WhatsApp within the day.</p>
+      <div class="field-row">
+        <input type="text" id="f-name" placeholder="Your name">
+        <input type="text" id="f-date" placeholder="Event date">
+      </div>
+      <div class="field-row">
+        <input type="text" id="f-guests" placeholder="Guest count">
+        <input type="text" id="f-phone" placeholder="Phone number">
+      </div>
+      <textarea id="f-msg" placeholder="Tell us about your event (mehndi, walima, corporate...)"></textarea>
+      <a class="btn btn-gold" id="f-submit" href="#" target="_blank" rel="noopener" style="width:100%;">Send Enquiry on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" id="foot-brand"></div>
+    <div id="foot-tagline" style="opacity:.7; font-size:13px;"></div>
+    <div class="disclaimer">
+      Prototype built for presentation purposes only — not a live production website.<br>
+      The full version includes your own domain, a content-editable admin, booking calendar and WhatsApp lead automation.
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const d = window.HALL_DATA;
+  if(!d){ document.body.innerHTML = "<p style='padding:40px;font-family:sans-serif;'>Missing data.js — this template needs a HALL_DATA object to render.</p>"; return; }
+
+  const icons = {
+    guests: '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    parking: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>',
+    power: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>',
+    catering: '<path d="M3 2v7c0 1.1.9 2 2 2s2-.9 2-2V2M5 11v11M9 2v9M13 22V2c3 0 5 2.5 5 6s-2 6-5 6"/>',
+    sound: '<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="8" r="2.5"/><circle cx="12" cy="16" r="1"/>',
+    ac: '<rect x="2" y="6" width="20" height="6" rx="1"/><path d="M6 12v6M12 12v6M18 12v6"/>'
+  };
+  const svgWrap = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  const stars = n => "★".repeat(Math.round(n)) + "☆".repeat(5-Math.round(n));
+  const waLink = (num, text) => `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
+
+  // Top bar
+  document.getElementById('tb-brand').innerHTML = d.name.split(' ')[0] + ' <small id="tb-brand-sub">' + d.name.split(' ').slice(1).join(' ') + '</small>';
+  document.getElementById('tb-call').href = 'tel:' + d.phoneLink;
+  document.getElementById('tb-call').textContent = d.phoneDisplay;
+
+  // Hero
+  document.getElementById('hero-img').src = d.heroImage;
+  document.getElementById('hero-urdu').textContent = d.nameUrdu || '';
+  document.getElementById('hero-name').textContent = d.name;
+  document.getElementById('hero-tagline').textContent = d.tagline;
+  document.getElementById('hero-stars').textContent = stars(d.rating);
+  document.getElementById('hero-reviews').textContent = `${d.rating.toFixed(1)} (${d.reviewCount} reviews)`;
+  document.getElementById('hero-hours').textContent = d.hoursLine;
+  document.getElementById('hero-whatsapp').href = waLink(d.whatsappNumber, `Hi, I'd like to enquire about booking ${d.name}.`);
+
+  // About
+  document.getElementById('about-title').textContent = `A legacy of grand celebrations`;
+  document.getElementById('about-text').textContent = d.story;
+  document.getElementById('about-img').src = d.gallery[0];
+
+  // Amenities
+  document.getElementById('amenities-grid').innerHTML = d.amenities.map(a => `
+    <div class="amenity">${svgWrap(icons[a.icon]||icons.guests)}<span>${a.label}</span></div>
+  `).join('');
+
+  // Gallery
+  document.getElementById('gallery-grid').innerHTML = d.gallery.map(src => `
+    <a href="${src}" target="_blank" rel="noopener"><img src="${src}" alt="${d.name} venue photo" loading="lazy"></a>
+  `).join('');
+
+  // Packages
+  document.getElementById('pkg-grid').innerHTML = d.packages.map(p => `
+    <div class="pkg-card ${p.featured ? 'featured':''}">
+      <div class="note">${p.note}</div>
+      <h3>${p.tier}</h3>
+      <div class="price">${p.price}</div>
+      <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+
+  // Reviews
+  document.getElementById('review-title').textContent = `Loved by ${d.reviewCount}+ families`;
+  document.getElementById('test-grid').innerHTML = d.testimonials.map(t => `
+    <div class="test-card">
+      <span class="stars" style="color:var(--gold);">${stars(t.rating)}</span>
+      <p>"${t.text}"</p>
+      <div class="name">${t.name}</div>
+    </div>
+  `).join('');
+
+  // Location
+  document.getElementById('loc-address').textContent = d.addressLine + (d.locatedIn ? ` · Located in ${d.locatedIn}` : '');
+  document.getElementById('loc-hours').textContent = d.hoursLine;
+  document.getElementById('loc-phone').textContent = d.phoneDisplay;
+  document.getElementById('loc-directions').href = d.mapsUrl;
+  document.getElementById('loc-map').href = d.mapsUrl;
+
+  // Inquiry form -> WhatsApp
+  document.getElementById('f-submit').addEventListener('click', function(e){
+    e.preventDefault();
+    const name = document.getElementById('f-name').value || 'there';
+    const date = document.getElementById('f-date').value || 'not specified';
+    const guests = document.getElementById('f-guests').value || 'not specified';
+    const phone = document.getElementById('f-phone').value || 'not provided';
+    const msg = document.getElementById('f-msg').value || '';
+    const text = `Hi, I'm ${name}. I'd like to enquire about ${d.name}.\nEvent date: ${date}\nGuests: ${guests}\nPhone: ${phone}\n${msg}`;
+    window.open(waLink(d.whatsappNumber, text), '_blank');
+  });
+
+  // Footer
+  document.getElementById('foot-brand').textContent = d.name;
+  document.getElementById('foot-tagline').textContent = d.tagline;
+
+  // Top bar solid-on-scroll
+  const topbar = document.getElementById('topbar');
+  window.addEventListener('scroll', () => {
+    topbar.classList.toggle('solid', window.scrollY > 40);
+  });
+})();
+</script>
+
+</body>
+</html>
