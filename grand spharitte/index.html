@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Banquet Hall — Preview</title>
+<title id="page-title"></title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -246,10 +246,10 @@
 </head>
 <body>
 
-<div class="demo-badge">PROTOTYPE PREVIEW</div>
+<div class="demo-badge" id="demo-badge"></div>
 
 <div class="topbar" id="topbar">
-  <div class="brand" id="tb-brand">— <small id="tb-brand-sub">BANQUET HALL</small></div>
+  <div class="brand" id="tb-brand"></div>
   <nav>
     <a href="#about" id="nav-about"></a>
     <a href="#gallery" id="nav-gallery"></a>
@@ -380,7 +380,10 @@
 <script>
 (function(){
   const d = window.HALL_DATA;
-  if(!d){ document.body.innerHTML = "<p style='padding:40px;font-family:sans-serif;'>Missing data.js — this template needs a HALL_DATA object to render.</p>"; return; }
+  if(!d){
+    document.body.innerHTML = "<p style='padding:40px;font-family:sans-serif;'>Missing data.js — this template needs a HALL_DATA object to render.</p>";
+    return;
+  }
 
   const icons = {
     guests: '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
@@ -393,80 +396,76 @@
   const svgWrap = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
   const stars = n => "★".repeat(Math.round(n)) + "☆".repeat(5-Math.round(n));
   const waLink = (num, text) => `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
+  const copy = d.copy || {};
 
-  // Safety net: if a hall left a copy field out of data.js, fall back to a plain generic
-  // label rather than leaving the page blank or throwing an error.
-  const c = d.copy || {};
-  const nav = c.nav || {};
-  const hero = c.hero || {};
-  const about = c.about || {};
-  const amen = c.amenities || {};
-  const gal = c.gallery || {};
-  const pkg = c.packages || {};
-  const rev = c.reviews || {};
-  const visit = c.visit || {};
-  const enq = c.enquiry || {};
-  const foot = c.footer || {};
-  const g = (obj, key, fallback) => (obj && obj[key]) ? obj[key] : fallback;
+  // Page metadata / demo label
+  document.getElementById('page-title').textContent = d.pageTitle || `${d.name} — ${d.category || 'Event Venue'}`;
+  document.getElementById('demo-badge').textContent = d.demoBadge || '';
 
   // Top bar
-  document.getElementById('tb-brand').innerHTML = d.name.split(' ')[0] + ' <small id="tb-brand-sub">' + d.name.split(' ').slice(1).join(' ') + '</small>';
-  document.getElementById('nav-about').textContent = g(nav,'about','About');
-  document.getElementById('nav-gallery').textContent = g(nav,'gallery','Gallery');
-  document.getElementById('nav-packages').textContent = g(nav,'packages','Packages');
-  document.getElementById('nav-reviews').textContent = g(nav,'reviews','Reviews');
-  document.getElementById('nav-visit').textContent = g(nav,'visit','Visit');
-  document.getElementById('tb-call').href = 'tel:' + d.phoneLink;
+  const brandParts = d.name.trim().split(/\s+/);
+  document.getElementById('tb-brand').innerHTML = `${brandParts[0]} <small id="tb-brand-sub">${brandParts.slice(1).join(' ')}</small>`;
+  document.getElementById('nav-about').textContent = copy.nav?.about || 'About';
+  document.getElementById('nav-gallery').textContent = copy.nav?.gallery || 'Gallery';
+  document.getElementById('nav-packages').textContent = copy.nav?.packages || 'Packages';
+  document.getElementById('nav-reviews').textContent = copy.nav?.reviews || 'Reviews';
+  document.getElementById('nav-visit').textContent = copy.nav?.visit || 'Visit';
+  document.getElementById('tb-call').href = `tel:${d.phoneLink}`;
   document.getElementById('tb-call').textContent = d.phoneDisplay;
 
   // Hero
   document.getElementById('hero-img').src = d.heroImage;
+  document.getElementById('hero-img').alt = `${d.name} — ${d.category || 'Event Venue'}`;
   document.getElementById('hero-urdu').textContent = d.nameUrdu || '';
   document.getElementById('hero-name').textContent = d.name;
   document.getElementById('hero-tagline').textContent = d.tagline;
   document.getElementById('hero-stars').textContent = stars(d.rating);
-  document.getElementById('hero-reviews').textContent = `${d.rating.toFixed(1)} (${d.reviewCount} reviews)`;
+  document.getElementById('hero-reviews').textContent = `${Number(d.rating).toFixed(1)} (${d.reviewCount} reviews)`;
   document.getElementById('hero-hours').textContent = d.hoursLine;
-  document.getElementById('hero-whatsapp').textContent = g(hero,'ctaPrimary','Enquire on WhatsApp');
-  document.getElementById('hero-cta-secondary').textContent = g(hero,'ctaSecondary','View Gallery');
-  document.getElementById('hero-whatsapp').href = waLink(d.whatsappNumber, g(hero,'whatsappMessageTemplate', `Hi, I'd like to enquire about booking ${d.name}.`).replace('{name}', d.name));
+  document.getElementById('hero-whatsapp').textContent = copy.hero?.ctaPrimary || 'Enquire on WhatsApp';
+  document.getElementById('hero-cta-secondary').textContent = copy.hero?.ctaSecondary || 'View Gallery';
+  document.getElementById('hero-whatsapp').href = waLink(
+    d.whatsappNumber,
+    (copy.hero?.whatsappMessageTemplate || `Hi, I'd like to enquire about booking ${d.name}.`).replace('{name}', d.name)
+  );
 
   // About
-  document.getElementById('about-eyebrow').textContent = g(about,'eyebrow','OUR STORY');
-  document.getElementById('about-title').textContent = g(about,'title','A legacy of grand celebrations');
+  document.getElementById('about-eyebrow').textContent = copy.about?.eyebrow || 'OUR STORY';
+  document.getElementById('about-title').textContent = copy.about?.title || 'About the venue';
   document.getElementById('about-text').textContent = d.story;
-  document.getElementById('about-img').src = d.gallery[0];
+  document.getElementById('about-img').src = d.aboutImage || d.gallery[0];
+  document.getElementById('about-img').alt = `${d.name} interior`;
 
   // Amenities
-  document.getElementById('amenities-eyebrow').textContent = g(amen,'eyebrow','FACILITIES');
-  document.getElementById('amenities-title').textContent = g(amen,'title','Everything the evening needs');
-  document.getElementById('amenities-grid').innerHTML = d.amenities.map(a => `
-    <div class="amenity">${svgWrap(icons[a.icon]||icons.guests)}<span>${a.label}</span></div>
+  document.getElementById('amenities-eyebrow').textContent = copy.amenities?.eyebrow || 'FACILITIES';
+  document.getElementById('amenities-title').textContent = copy.amenities?.title || 'Facilities';
+  document.getElementById('amenities-grid').innerHTML = (d.amenities || []).map(a => `
+    <div class="amenity">${svgWrap(icons[a.icon] || icons.guests)}<span>${a.label}</span></div>
   `).join('');
 
   // Gallery
-  document.getElementById('gallery-eyebrow').textContent = g(gal,'eyebrow','GALLERY');
-  document.getElementById('gallery-title').textContent = g(gal,'title','A hall built for the biggest nights');
-  document.getElementById('gallery-grid').innerHTML = d.gallery.map(src => `
+  document.getElementById('gallery-eyebrow').textContent = copy.gallery?.eyebrow || 'GALLERY';
+  document.getElementById('gallery-title').textContent = copy.gallery?.title || 'Gallery';
+  document.getElementById('gallery-grid').innerHTML = (d.gallery || []).map(src => `
     <a href="${src}" target="_blank" rel="noopener"><img src="${src}" alt="${d.name} venue photo" loading="lazy"></a>
   `).join('');
 
   // Packages
-  document.getElementById('packages-eyebrow').textContent = g(pkg,'eyebrow','PACKAGES');
-  document.getElementById('packages-title').textContent = g(pkg,'title','Choose your evening');
-  document.getElementById('pkg-grid').innerHTML = d.packages.map(p => `
+  document.getElementById('packages-eyebrow').textContent = copy.packages?.eyebrow || 'PACKAGES';
+  document.getElementById('packages-title').textContent = copy.packages?.title || 'Packages';
+  document.getElementById('pkg-grid').innerHTML = (d.packages || []).map(p => `
     <div class="pkg-card ${p.featured ? 'featured':''}">
       <div class="note">${p.note}</div>
       <h3>${p.tier}</h3>
       <div class="price">${p.price}</div>
-      <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <ul>${(p.features || []).map(f=>`<li>${f}</li>`).join('')}</ul>
     </div>
   `).join('');
 
   // Reviews
-  document.getElementById('reviews-eyebrow').textContent = g(rev,'eyebrow','GUEST REVIEWS');
-  document.getElementById('review-title').textContent = g(rev,'titleTemplate','Loved by {count}+ families').replace('{count}', d.reviewCount);
-  document.getElementById('test-grid').innerHTML = d.testimonials.map(t => `
+  document.getElementById('reviews-eyebrow').textContent = copy.reviews?.eyebrow || 'GUEST REVIEWS';
+  document.getElementById('review-title').textContent = (copy.reviews?.titleTemplate || 'Reviews from our guests').replace('{count}', d.reviewCount);
+  document.getElementById('test-grid').innerHTML = (d.testimonials || []).map(t => `
     <div class="test-card">
       <span class="stars" style="color:var(--gold);">${stars(t.rating)}</span>
       <p>"${t.text}"</p>
@@ -475,45 +474,51 @@
   `).join('');
 
   // Location
-  document.getElementById('visit-eyebrow').textContent = g(visit,'eyebrow','VISIT US');
-  document.getElementById('loc-title').textContent = g(visit,'title','Plan your visit');
-  document.getElementById('visit-address-label').textContent = g(visit,'addressLabel','ADDRESS');
-  document.getElementById('visit-hours-label').textContent = g(visit,'hoursLabel','HOURS');
-  document.getElementById('visit-phone-label').textContent = g(visit,'phoneLabel','PHONE');
-  document.getElementById('loc-directions').textContent = g(visit,'directionsCta','Get Directions');
-  document.getElementById('loc-address').textContent = d.addressLine + (d.locatedIn ? ` · Located in ${d.locatedIn}` : '');
+  document.getElementById('visit-eyebrow').textContent = copy.visit?.eyebrow || 'VISIT US';
+  document.getElementById('loc-title').textContent = copy.visit?.title || 'Plan your visit';
+  document.getElementById('visit-address-label').textContent = copy.visit?.addressLabel || 'ADDRESS';
+  document.getElementById('visit-hours-label').textContent = copy.visit?.hoursLabel || 'HOURS';
+  document.getElementById('visit-phone-label').textContent = copy.visit?.phoneLabel || 'PHONE';
+  document.getElementById('loc-directions').textContent = copy.visit?.directionsCta || 'Get Directions';
+  document.getElementById('loc-address').textContent = d.addressLine + (d.locatedIn ? ` · ${d.locatedIn}` : '');
   document.getElementById('loc-hours').textContent = d.hoursLine;
   document.getElementById('loc-phone').textContent = d.phoneDisplay;
   document.getElementById('loc-directions').href = d.mapsUrl;
   document.getElementById('loc-map').href = d.mapsUrl;
 
   // Enquiry
-  document.getElementById('enquiry-eyebrow').textContent = g(enq,'eyebrow','ENQUIRE');
-  document.getElementById('enquiry-title').textContent = g(enq,'title','Check your date');
-  document.getElementById('enquiry-subtext').textContent = g(enq,'subtext',"Tell us about your event and we'll reply on WhatsApp within the day.");
-  document.getElementById('f-name').placeholder = g(enq,'namePlaceholder','Your name');
-  document.getElementById('f-date').placeholder = g(enq,'datePlaceholder','Event date');
-  document.getElementById('f-guests').placeholder = g(enq,'guestsPlaceholder','Guest count');
-  document.getElementById('f-phone').placeholder = g(enq,'phonePlaceholder','Phone number');
-  document.getElementById('f-msg').placeholder = g(enq,'msgPlaceholder','Tell us about your event (mehndi, walima, corporate...)');
-  document.getElementById('f-submit').textContent = g(enq,'submitCta','Send Enquiry on WhatsApp');
+  document.getElementById('enquiry-eyebrow').textContent = copy.enquiry?.eyebrow || 'ENQUIRE';
+  document.getElementById('enquiry-title').textContent = copy.enquiry?.title || 'Make an enquiry';
+  document.getElementById('enquiry-subtext').textContent = copy.enquiry?.subtext || 'Send your event details and contact us on WhatsApp.';
+  document.getElementById('f-name').placeholder = copy.enquiry?.namePlaceholder || 'Your name';
+  document.getElementById('f-date').placeholder = copy.enquiry?.datePlaceholder || 'Event date';
+  document.getElementById('f-guests').placeholder = copy.enquiry?.guestsPlaceholder || 'Guest count';
+  document.getElementById('f-phone').placeholder = copy.enquiry?.phonePlaceholder || 'Phone number';
+  document.getElementById('f-msg').placeholder = copy.enquiry?.msgPlaceholder || 'Tell us about your event';
+  document.getElementById('f-submit').textContent = copy.enquiry?.submitCta || 'Send Enquiry on WhatsApp';
 
   // Inquiry form -> WhatsApp
   document.getElementById('f-submit').addEventListener('click', function(e){
     e.preventDefault();
-    const name = document.getElementById('f-name').value || 'there';
-    const date = document.getElementById('f-date').value || 'not specified';
-    const guests = document.getElementById('f-guests').value || 'not specified';
-    const phone = document.getElementById('f-phone').value || 'not provided';
+    const name = document.getElementById('f-name').value || '';
+    const date = document.getElementById('f-date').value || '';
+    const guests = document.getElementById('f-guests').value || '';
+    const phone = document.getElementById('f-phone').value || '';
     const msg = document.getElementById('f-msg').value || '';
-    const text = `Hi, I'm ${name}. I'd like to enquire about ${d.name}.\nEvent date: ${date}\nGuests: ${guests}\nPhone: ${phone}\n${msg}`;
+    const template = copy.enquiry?.whatsappMessageTemplate || `Hi, I'd like to enquire about ${d.name}.`;
+    const text = template
+      .replace('{name}', name)
+      .replace('{date}', date)
+      .replace('{guests}', guests)
+      .replace('{phone}', phone)
+      .replace('{message}', msg);
     window.open(waLink(d.whatsappNumber, text), '_blank');
   });
 
   // Footer
   document.getElementById('foot-brand').textContent = d.name;
   document.getElementById('foot-tagline').textContent = d.tagline;
-  document.getElementById('foot-disclaimer').innerHTML = g(foot,'disclaimerLine1','Prototype built for presentation purposes only — not a live production website.') + '<br>' + g(foot,'disclaimerLine2','The full version includes your own domain, a content-editable admin, booking calendar and WhatsApp lead automation.');
+  document.getElementById('foot-disclaimer').innerHTML = copy.footer?.disclaimerLine1 || '';
 
   // Top bar solid-on-scroll
   const topbar = document.getElementById('topbar');
