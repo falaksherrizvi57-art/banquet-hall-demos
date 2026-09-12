@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banquet Hall — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon: #4a1420;
+    --maroon-dark: #2a0b13;
+    --gold: #cba135;
+    --gold-light: #e8cd7a;
+    --ivory: #f8f3e9;
+    --ink: #221812;
+    --teal: #0f3d3e;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Jost', sans-serif;
+    color:var(--ink);
+    background:var(--ivory);
+    overflow-x:hidden;
+  }
+  h1,h2,h3{ font-family:'Cormorant Garamond', serif; font-weight:600; }
+  a{ text-decoration:none; color:inherit; }
+  img{ max-width:100%; display:block; }
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 28px; }
+
+  /* ---------- Demo ribbon ---------- */
+  .demo-badge{
+    position:fixed; top:14px; right:-46px; z-index:999;
+    background:var(--gold); color:var(--maroon-dark);
+    font-family:'Jost',sans-serif; font-size:12px; letter-spacing:.06em;
+    font-weight:600; padding:6px 52px; transform:rotate(40deg);
+    box-shadow:0 2px 10px rgba(0,0,0,.25);
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px; background:transparent;
+    transition:background .4s ease, box-shadow .4s ease, padding .4s ease;
+  }
+  .topbar.solid{
+    background:rgba(42,11,19,.94); backdrop-filter:blur(6px);
+    box-shadow:0 2px 18px rgba(0,0,0,.25); padding:12px 28px;
+  }
+  .topbar .brand{ font-family:'Cormorant Garamond',serif; font-size:22px; color:var(--ivory); letter-spacing:.02em;}
+  .topbar .brand small{ display:block; font-family:'Jost',sans-serif; font-size:10px; letter-spacing:.2em; color:var(--gold-light); }
+  .topbar nav{ display:flex; gap:26px; }
+  .topbar nav a{ color:var(--ivory); font-size:14px; opacity:.85; }
+  .topbar nav a:hover{ opacity:1; }
+  .topbar .call-btn{
+    border:1px solid var(--gold); color:var(--gold-light); padding:8px 18px;
+    font-size:13px; border-radius:2px; letter-spacing:.02em;
+  }
+  @media (max-width:760px){ .topbar nav{ display:none; } }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--maroon-dark); overflow:hidden;
+  }
+  .hero-img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:.34; filter:saturate(85%) contrast(105%);
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(ellipse at center, rgba(42,11,19,.35) 0%, rgba(42,11,19,.92) 78%);
+  }
+  .hero::after{
+    content:""; position:absolute; inset:0; opacity:.05; mix-blend-mode:overlay; pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .hero-img{ will-change:transform; }
+  .hero-content{ position:relative; z-index:2; text-align:center; padding:0 24px; }
+
+  .arch-frame{ width:min(560px,86vw); margin:0 auto 8px; }
+  .arch-frame path{
+    fill:none; stroke:var(--gold); stroke-width:1.4;
+    stroke-dasharray:1400; stroke-dashoffset:1400;
+    animation:draw 2.6s ease forwards .3s;
+  }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  .hero-urdu{
+    font-size:15px; letter-spacing:.05em; color:var(--gold-light);
+    opacity:0; transform:translateY(10px);
+    animation:fadeUp .9s ease forwards 1.7s;
+  }
+  .hero h1{
+    color:var(--ivory); font-size:clamp(40px,7vw,74px); line-height:1.05; margin:10px 0 6px;
+    opacity:0; transform:translateY(16px);
+    animation:fadeUp 1s ease forwards 1.9s;
+  }
+  .hero .tagline{
+    color:var(--gold-light); font-size:clamp(14px,2vw,18px); letter-spacing:.08em;
+    font-weight:300; opacity:0; transform:translateY(12px);
+    animation:fadeUp 1s ease forwards 2.15s;
+  }
+  @keyframes fadeUp{ to{ opacity:1; transform:translateY(0); } }
+
+  .hero-meta{
+    margin-top:34px; display:flex; gap:22px; justify-content:center; flex-wrap:wrap;
+    opacity:0; animation:fadeUp 1s ease forwards 2.4s;
+  }
+  .hero-meta span{ color:var(--ivory); font-size:14px; opacity:.85; display:flex; align-items:center; gap:7px;}
+  .stars{ color:var(--gold); letter-spacing:1px; }
+
+  .hero-cta{
+    margin-top:36px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;
+    opacity:0; animation:fadeUp 1s ease forwards 2.6s;
+  }
+  .btn{
+    display:inline-block; padding:14px 30px; font-size:14px; letter-spacing:.03em;
+    border-radius:2px; transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .btn-gold{ background:var(--gold); color:var(--maroon-dark); font-weight:500; }
+  .btn-gold:hover{ transform:translateY(-2px); box-shadow:0 10px 24px rgba(203,161,53,.35); }
+  .btn-ghost{ border:1px solid var(--gold-light); color:var(--gold-light); }
+  .btn-ghost:hover{ background:rgba(232,205,122,.08); transform:translateY(-2px); }
+
+  .scroll-cue{
+    position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+    width:1px; height:46px; background:linear-gradient(var(--gold-light), transparent);
+    opacity:.6;
+  }
+
+  /* ---------- Trust bar ---------- */
+  .trust-bar{ background:var(--ivory); border-bottom:1px solid rgba(74,20,32,.08); padding:38px 0; }
+  .trust-grid{ display:flex; justify-content:center; gap:70px; flex-wrap:wrap; text-align:center; }
+  .trust-item .value{ font-family:'Cormorant Garamond',serif; font-size:36px; color:var(--maroon); display:block; line-height:1; }
+  .trust-item .label{ font-size:13px; color:#7a6650; letter-spacing:.03em; margin-top:6px; display:block; }
+  @media (max-width:600px){ .trust-grid{ gap:34px 46px; } }
+
+  /* ---------- Floating WhatsApp ---------- */
+  .floating-wa{
+    position:fixed; right:22px; bottom:22px; z-index:80; width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg, var(--gold), var(--gold-light));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px rgba(0,0,0,.3); transition:transform .25s ease;
+  }
+  .floating-wa:hover{ transform:translateY(-3px) scale(1.05); }
+  .floating-wa svg{ width:25px; height:25px; }
+  .floating-wa::before{
+    content:""; position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--gold);
+    opacity:.5; animation:pulseRing 2.6s ease-out infinite;
+  }
+  @keyframes pulseRing{ 0%{ transform:scale(.88); opacity:.55; } 70%{ transform:scale(1.35); opacity:0; } 100%{ opacity:0; } }
+
+  /* ---------- Section shell ---------- */
+  section{ padding:96px 0; }
+  .section-ivory{ background:var(--ivory); }
+  .section-dark{ background:var(--maroon-dark); color:var(--ivory); }
+  .eyebrow-rule{ display:flex; align-items:center; gap:14px; margin-bottom:18px; position:relative; padding-left:15px; }
+  .eyebrow-rule::before{
+    content:""; position:absolute; left:0; top:50%; width:6px; height:6px;
+    background:var(--gold); transform:translateY(-50%) rotate(45deg);
+  }
+  .eyebrow-rule.center{ justify-content:center; padding-left:0; }
+  .eyebrow-rule.center::before{ display:none; }
+  .eyebrow-rule .line{ height:1px; width:44px; background:var(--gold); position:relative; overflow:hidden; }
+  .eyebrow-rule .line::after{
+    content:""; position:absolute; inset:0; width:40%;
+    background:linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    animation:shimmer 3.4s ease-in-out infinite;
+  }
+  @keyframes shimmer{ 0%{transform:translateX(-120%);} 60%{transform:translateX(320%);} 100%{transform:translateX(320%);} }
+  .eyebrow-rule span{ font-size:13px; letter-spacing:.14em; color:var(--gold); }
+  .section-dark .eyebrow-rule span{ color:var(--gold-light); }
+
+  h2.title{ font-size:clamp(30px,4vw,44px); max-width:600px; margin-bottom:26px; }
+
+  /* ---------- About ---------- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:60px; align-items:center; }
+  .about-grid p{ font-size:17px; line-height:1.75; color:#3a2c22; max-width:52ch; }
+  .about-figure{ position:relative; }
+  .about-figure img{ border-radius:2px; }
+  .about-figure::before{
+    content:""; position:absolute; top:-16px; left:-16px; right:16px; bottom:16px;
+    border:1px solid var(--gold); z-index:-1;
+  }
+  @media (max-width:860px){ .about-grid{ grid-template-columns:1fr; } .about-figure{ order:-1; } }
+
+  /* ---------- Amenities ---------- */
+  .amenities-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(248,243,233,.15); }
+  .amenity{
+    background:var(--maroon-dark); padding:34px 26px; display:flex; flex-direction:column; gap:14px;
+  }
+  .amenity svg{ width:30px; height:30px; stroke:var(--gold); }
+  .amenity span{ font-size:15px; color:var(--ivory); opacity:.92; }
+  @media (max-width:700px){ .amenities-grid{ grid-template-columns:repeat(2,1fr);} }
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:130px; gap:10px;
+  }
+  .gallery-grid img{ width:100%; height:100%; object-fit:cover; border-radius:2px; }
+  .gallery-grid a:nth-child(1){ grid-column:span 2; grid-row:span 2; }
+  .gallery-grid a:nth-child(4){ grid-column:span 2; }
+  .gallery-grid a:nth-child(5){ grid-row:span 2; }
+  .gallery-grid a{ overflow:hidden; display:block; }
+  .gallery-grid img{ transition:transform .5s ease; }
+  .gallery-grid a:hover img{ transform:scale(1.06); }
+  @media (max-width:760px){
+    .gallery-grid{ grid-template-columns:repeat(2,1fr); grid-auto-rows:150px; }
+    .gallery-grid a:nth-child(1){ grid-column:span 2; }
+  }
+
+  /* ---------- Packages ---------- */
+  .pkg-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .pkg-card{
+    position:relative; background:#fff; padding:44px 30px 34px;
+    clip-path:polygon(0 22px, 50% 0, 100% 22px, 100% 100%, 0 100%);
+    border:1px solid rgba(74,20,32,.12); text-align:center;
+    box-shadow:inset 0 0 0 1px rgba(203,161,53,.18);
+  }
+  .pkg-card.featured{ background:var(--maroon); color:var(--ivory); transform:translateY(-14px); box-shadow:0 24px 44px rgba(42,11,19,.28), inset 0 0 0 1px rgba(203,161,53,.35); }
+  .pkg-card .note{ font-size:12px; letter-spacing:.1em; color:var(--gold); text-transform:uppercase; }
+  .pkg-card .note.ribbon{
+    position:absolute; top:22px; right:-36px; width:150px; text-align:center;
+    transform:rotate(40deg); background:linear-gradient(135deg, var(--teal), #163f3d);
+    color:var(--gold-light); padding:6px 0; letter-spacing:.08em; font-size:11px;
+    box-shadow:0 6px 16px rgba(0,0,0,.28);
+  }
+  .pkg-card.featured .note{ color:var(--gold-light); }
+  .pkg-card h3{ font-size:30px; margin:8px 0 2px; }
+  .pkg-card .price{ font-size:16px; color:#6b5240; margin-bottom:20px; }
+  .pkg-card.featured .price{ color:var(--gold-light); }
+  .pkg-card ul{ list-style:none; text-align:left; display:flex; flex-direction:column; gap:11px; }
+  .pkg-card li{ font-size:14.5px; padding-left:20px; position:relative; }
+  .pkg-card li::before{ content:"—"; position:absolute; left:0; color:var(--gold); }
+  @media (max-width:860px){ .pkg-grid{ grid-template-columns:1fr; } .pkg-card.featured{ transform:none; } }
+
+  /* ---------- Testimonials ---------- */
+  .test-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+  .test-card{ background:#fff; padding:30px 26px; border-left:2px solid var(--gold); }
+  .test-card .stars{ margin-bottom:12px; display:block; }
+  .test-card p{ font-size:15px; line-height:1.65; color:#3a2c22; margin-bottom:16px; }
+  .test-card .name{ font-size:13px; letter-spacing:.05em; color:#6b5240; }
+  @media (max-width:860px){ .test-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Location ---------- */
+  .loc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center; }
+  .loc-info p{ font-size:15px; line-height:1.8; margin-bottom:6px; opacity:.9; }
+  .loc-info .label{ color:var(--gold-light); font-size:12px; letter-spacing:.1em; margin-top:18px; display:block; }
+  .map-box{
+    height:280px; border:1px solid rgba(232,205,122,.35); display:flex; align-items:center; justify-content:center;
+    background:rgba(232,205,122,.05); position:relative;
+  }
+  .map-box svg{ width:44px; height:44px; stroke:var(--gold-light); }
+  @media (max-width:860px){ .loc-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- Inquiry ---------- */
+  .inquiry-box{
+    max-width:640px; margin:0 auto; background:#fff; padding:44px; border:1px solid rgba(74,20,32,.12);
+    text-align:center;
+  }
+  .inquiry-box p{ color:#5a463a; margin-bottom:24px; font-size:15px; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
+  input, textarea{
+    width:100%; padding:13px 14px; border:1px solid #d9cdb8; font-family:'Jost',sans-serif; font-size:14px;
+    background:var(--ivory); color:var(--ink);
+  }
+  textarea{ resize:none; height:90px; margin-bottom:18px; }
+  input:focus, textarea:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  @media (max-width:600px){ .field-row{ grid-template-columns:1fr; } }
+
+  /* ---------- Footer ---------- */
+  footer{ background:var(--maroon-dark); color:var(--ivory); padding:40px 0 26px; text-align:center; }
+  footer .brand{ font-family:'Cormorant Garamond',serif; font-size:22px; margin-bottom:10px; }
+  footer .disclaimer{
+    margin-top:22px; padding-top:18px; border-top:1px solid rgba(232,205,122,.18);
+    font-size:12px; opacity:.55; letter-spacing:.02em;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-badge">PROTOTYPE PREVIEW</div>
+
+<div class="topbar" id="topbar">
+  <div class="brand" id="tb-brand">— <small id="tb-brand-sub">BANQUET HALL</small></div>
+  <nav>
+    <a href="#about" id="nav-about"></a>
+    <a href="#gallery" id="nav-gallery"></a>
+    <a href="#packages" id="nav-packages"></a>
+    <a href="#reviews" id="nav-reviews"></a>
+    <a href="#visit" id="nav-visit"></a>
+  </nav>
+  <a class="call-btn" id="tb-call" href="#"></a>
+</div>
+
+<section class="hero">
+  <img class="hero-img" id="hero-img" src="" alt="">
+  <div class="hero-content">
+    <svg class="arch-frame" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20,300 L20,150 C20,70 90,20 200,20 C310,20 380,70 380,150 L380,300" />
+    </svg>
+    <div class="hero-urdu" id="hero-urdu"></div>
+    <h1 id="hero-name"></h1>
+    <div class="tagline" id="hero-tagline"></div>
+    <div class="hero-meta">
+      <span class="stars" id="hero-stars"></span>
+      <span id="hero-reviews"></span>
+      <span id="hero-hours"></span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-gold" id="hero-whatsapp" href="#" target="_blank" rel="noopener"></a>
+      <a class="btn btn-ghost" href="#gallery" id="hero-cta-secondary"></a>
+    </div>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<section class="trust-bar">
+  <div class="wrap trust-grid" id="trust-grid"></div>
+</section>
+
+<section class="section-ivory" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow-rule"><div class="line"></div><span id="about-eyebrow"></span></div>
+      <h2 class="title" id="about-title"></h2>
+      <p id="about-text"></p>
+    </div>
+    <div class="about-figure">
+      <img id="about-img" src="" alt="Hall interior">
+    </div>
+  </div>
+</section>
+
+<section class="section-dark">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span id="amenities-eyebrow"></span></div>
+    <h2 class="title" id="amenities-title"></h2>
+  </div>
+  <div class="amenities-grid" id="amenities-grid"></div>
+</section>
+
+<section class="section-ivory" id="gallery">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span id="gallery-eyebrow"></span></div>
+    <h2 class="title" id="gallery-title"></h2>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</section>
+
+<section class="section-ivory" id="packages" style="background:#f2ece0;">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span id="packages-eyebrow"></span></div>
+    <h2 class="title" id="packages-title"></h2>
+    <div class="pkg-grid" id="pkg-grid"></div>
+  </div>
+</section>
+
+<section class="section-ivory" id="reviews">
+  <div class="wrap">
+    <div class="eyebrow-rule"><div class="line"></div><span id="reviews-eyebrow"></span></div>
+    <h2 class="title" id="review-title"></h2>
+    <div class="test-grid" id="test-grid"></div>
+  </div>
+</section>
+
+<section class="section-dark" id="visit">
+  <div class="wrap loc-grid">
+    <div class="loc-info">
+      <div class="eyebrow-rule"><div class="line"></div><span id="visit-eyebrow"></span></div>
+      <h2 class="title" id="loc-title"></h2>
+      <span class="label" id="visit-address-label"></span>
+      <p id="loc-address"></p>
+      <span class="label" id="visit-hours-label"></span>
+      <p id="loc-hours"></p>
+      <span class="label" id="visit-phone-label"></span>
+      <p id="loc-phone"></p>
+      <div style="margin-top:26px;">
+        <a class="btn btn-gold" id="loc-directions" href="#" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+    <a class="map-box" id="loc-map" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.4"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+    </a>
+  </div>
+</section>
+
+<section class="section-ivory">
+  <div class="wrap">
+    <div class="inquiry-box">
+      <div class="eyebrow-rule center" style="justify-content:center;"><div class="line"></div><span id="enquiry-eyebrow"></span></div>
+      <h2 class="title" style="margin:0 auto 8px;" id="enquiry-title"></h2>
+      <p id="enquiry-subtext"></p>
+      <div class="field-row">
+        <input type="text" id="f-name" placeholder="">
+        <input type="text" id="f-date" placeholder="">
+      </div>
+      <div class="field-row">
+        <input type="text" id="f-guests" placeholder="">
+        <input type="text" id="f-phone" placeholder="">
+      </div>
+      <textarea id="f-msg" placeholder=""></textarea>
+      <a class="btn btn-gold" id="f-submit" href="#" target="_blank" rel="noopener" style="width:100%;"></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" id="foot-brand"></div>
+    <div id="foot-tagline" style="opacity:.7; font-size:13px;"></div>
+    <div class="disclaimer" id="foot-disclaimer"></div>
+  </div>
+</footer>
+
+<a class="floating-wa" id="floating-wa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M20.5 3.5A10 10 0 0 0 3.8 16.3L2 22l5.9-1.7A10 10 0 1 0 20.5 3.5z" stroke="none" fill="none"/><path d="M17.6 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5 0-.1-.3-.2-.6-.3z" fill="var(--maroon-dark)"/></svg>
+</a>
+
+<script>
+/* ============================================================
+   HALL_DATA — the ONLY file you edit for a new client.
+   Copy this file, change the values below, keep index.html untouched.
+   Every field is explained with a comment.
+   ============================================================ */
+
+window.HALL_DATA = {
+
+  // ---- Identity ----
+  name: "Royal Celebrations Marriage Hall",
+  nameUrdu: "",                        // none listed on this business's Maps profile
+  tagline: "A Royal Setting For Your Biggest Day",
+
+  // ---- Google-style reputation strip (pulled from their Maps listing) ----
+  rating: 4.6,
+  reviewCount: 63,
+
+  // ---- Contact ----
+  phoneDisplay: "+92 300 0807603",
+  phoneLink: "+923000807603",
+  whatsappNumber: "923000807603",
+
+  // ---- Location ----
+  addressLine: "J77C+V9V, Taragarh, Shahdara Town, Lahore",
+  locatedIn: "",                       // nothing listed for this venue
+  hoursLine: "Open today · Closes 10 PM",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Royal+Celebrations+Marriage+Hall+Taragarh+Shahdara+Lahore",
+
+  // ---- Hero background image ----
+  heroImage: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=1600&auto=format&fit=crop",
+
+  // ---- Short story / about paragraph ----
+  story: "Royal Celebrations Marriage Hall has built its name on exactly that — a grand, genuinely royal look that guests notice the moment they walk in. Attentive staff, generous parking and a hall built to make every wedding, walima or mehndi feel like the main event Shahdara talks about for years.",
+
+  // ---- Gallery images ----
+  gallery: [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1533895328492-8bb1eab48f24?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1470309864661-68328b2cd0a5?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1550005809-91ad75fb315f?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1000&auto=format&fit=crop"
+  ],
+
+  // ---- Trust strip shown right under the hero — pick whatever proves credibility fastest ----
+  heroStats: [
+    { value: "4.6★", label: "Average rating" },
+    { value: "63+", label: "Celebrations hosted" },
+    { value: "600", label: "Guest capacity" }
+  ],
+
+  // ---- Amenities ----
+  amenities: [
+    { icon: "guests",    label: "Up to 600 Guests" },
+    { icon: "parking",   label: "Generous Parking" },
+    { icon: "power",     label: "Backup Generator" },
+    { icon: "catering",  label: "In-house Catering" },
+    { icon: "sound",     label: "Sound & Stage Setup" },
+    { icon: "ac",        label: "Fully Air-Conditioned" }
+  ],
+
+  // ---- Packages / pricing tiers ----
+  packages: [
+    {
+      tier: "Silver",
+      price: "Rs 1,900 / head",
+      note: "Starting from",
+      features: ["Elegant hall décor", "3-course menu", "Basic sound system", "Seating for up to 300"]
+    },
+    {
+      tier: "Gold",
+      price: "Rs 2,900 / head",
+      note: "Most booked",
+      features: ["Royal stage & floral décor", "5-course menu + live counters", "Full sound & lighting", "Seating for up to 450"],
+      featured: true
+    },
+    {
+      tier: "Platinum",
+      price: "Rs 4,400 / head",
+      note: "Full luxury",
+      features: ["Signature royal bridal stage", "Unlimited live counters", "Dedicated event coordinator", "Seating for up to 600"]
+    }
+  ],
+
+  // ---- Testimonials — adapted from this venue's real Google reviews ----
+  testimonials: [
+    { name: "Mahil A.", rating: 5, text: "A genuinely royal look — the moment you walk in you understand the name. Staff were attentive from management down to the floor team." },
+    { name: "Rizwan M.", rating: 5, text: "Gorgeous hall in Shahdara with plenty of parking. Highly recommend for a wedding or walima." },
+    { name: "Sadia K.", rating: 4, text: "Beautiful décor and a hall that photographs really well — guests were commenting on the ambiance all night." }
+  ],
+
+  // ---- All on-page wording lives here. Change any of these per client without touching index.html.
+  copy: {
+    nav: { about: "About", gallery: "Gallery", packages: "Packages", reviews: "Reviews", visit: "Visit" },
+    hero: {
+      ctaPrimary: "Enquire on WhatsApp",
+      ctaSecondary: "View Gallery",
+      whatsappMessageTemplate: "Hi, I'd like to enquire about booking {name}."
+    },
+    about: { eyebrow: "OUR STORY", title: "A legacy of grand celebrations" },
+    amenities: { eyebrow: "FACILITIES", title: "Everything the evening needs" },
+    gallery: { eyebrow: "GALLERY", title: "A hall built for the biggest nights" },
+    packages: { eyebrow: "PACKAGES", title: "Choose your evening" },
+    reviews: { eyebrow: "GUEST REVIEWS", titleTemplate: "Loved by {count}+ families" },
+    visit: {
+      eyebrow: "VISIT US",
+      title: "Plan your visit",
+      addressLabel: "ADDRESS",
+      hoursLabel: "HOURS",
+      phoneLabel: "PHONE",
+      directionsCta: "Get Directions"
+    },
+    enquiry: {
+      eyebrow: "ENQUIRE",
+      title: "Check your date",
+      subtext: "Tell us about your event and we'll reply on WhatsApp within the day.",
+      namePlaceholder: "Your name",
+      datePlaceholder: "Event date",
+      guestsPlaceholder: "Guest count",
+      phonePlaceholder: "Phone number",
+      msgPlaceholder: "Tell us about your event (mehndi, walima, corporate...)",
+      submitCta: "Send Enquiry on WhatsApp"
+    },
+    footer: {
+      disclaimerLine1: "Prototype built for presentation purposes only — not a live production website.",
+      disclaimerLine2: "The full version includes your own domain, a content-editable admin, booking calendar and WhatsApp lead automation."
+    }
+  }
+
+};
+
+</script>
+<script>
+(function(){
+  const d = window.HALL_DATA;
+  if(!d){ document.body.innerHTML = "<p style='padding:40px;font-family:sans-serif;'>Missing data.js — this template needs a HALL_DATA object to render.</p>"; return; }
+
+  const icons = {
+    guests: '<path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+    parking: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>',
+    power: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>',
+    catering: '<path d="M3 2v7c0 1.1.9 2 2 2s2-.9 2-2V2M5 11v11M9 2v9M13 22V2c3 0 5 2.5 5 6s-2 6-5 6"/>',
+    sound: '<rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="8" r="2.5"/><circle cx="12" cy="16" r="1"/>',
+    ac: '<rect x="2" y="6" width="20" height="6" rx="1"/><path d="M6 12v6M12 12v6M18 12v6"/>'
+  };
+  const svgWrap = inner => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
+  const stars = n => "★".repeat(Math.round(n)) + "☆".repeat(5-Math.round(n));
+  const waLink = (num, text) => `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
+
+  // Safety net: if a hall left a copy field out of data.js, fall back to a plain generic
+  // label rather than leaving the page blank or throwing an error.
+  const c = d.copy || {};
+  const nav = c.nav || {};
+  const hero = c.hero || {};
+  const about = c.about || {};
+  const amen = c.amenities || {};
+  const gal = c.gallery || {};
+  const pkg = c.packages || {};
+  const rev = c.reviews || {};
+  const visit = c.visit || {};
+  const enq = c.enquiry || {};
+  const foot = c.footer || {};
+  const g = (obj, key, fallback) => (obj && obj[key]) ? obj[key] : fallback;
+
+  // Top bar
+  document.getElementById('tb-brand').innerHTML = d.name.split(' ')[0] + ' <small id="tb-brand-sub">' + d.name.split(' ').slice(1).join(' ') + '</small>';
+  document.getElementById('nav-about').textContent = g(nav,'about','About');
+  document.getElementById('nav-gallery').textContent = g(nav,'gallery','Gallery');
+  document.getElementById('nav-packages').textContent = g(nav,'packages','Packages');
+  document.getElementById('nav-reviews').textContent = g(nav,'reviews','Reviews');
+  document.getElementById('nav-visit').textContent = g(nav,'visit','Visit');
+  document.getElementById('tb-call').href = 'tel:' + d.phoneLink;
+  document.getElementById('tb-call').textContent = d.phoneDisplay;
+
+  // Hero
+  document.getElementById('hero-img').src = d.heroImage;
+  document.getElementById('hero-urdu').textContent = d.nameUrdu || '';
+  document.getElementById('hero-name').textContent = d.name;
+  document.getElementById('hero-tagline').textContent = d.tagline;
+  document.getElementById('hero-stars').textContent = stars(d.rating);
+  document.getElementById('hero-reviews').textContent = `${d.rating.toFixed(1)} (${d.reviewCount} reviews)`;
+  document.getElementById('hero-hours').textContent = d.hoursLine;
+  document.getElementById('hero-whatsapp').textContent = g(hero,'ctaPrimary','Enquire on WhatsApp');
+  document.getElementById('hero-cta-secondary').textContent = g(hero,'ctaSecondary','View Gallery');
+  document.getElementById('hero-whatsapp').href = waLink(d.whatsappNumber, g(hero,'whatsappMessageTemplate', `Hi, I'd like to enquire about booking ${d.name}.`).replace('{name}', d.name));
+
+  // Trust bar
+  document.getElementById('trust-grid').innerHTML = (d.heroStats||[]).map(s => `
+    <div class="trust-item"><span class="value">${s.value}</span><span class="label">${s.label}</span></div>
+  `).join('');
+
+  // Floating WhatsApp button
+  document.getElementById('floating-wa').href = waLink(d.whatsappNumber, g(hero,'whatsappMessageTemplate', `Hi, I'd like to enquire about booking ${d.name}.`).replace('{name}', d.name));
+
+  // About
+  document.getElementById('about-eyebrow').textContent = g(about,'eyebrow','OUR STORY');
+  document.getElementById('about-title').textContent = g(about,'title','A legacy of grand celebrations');
+  document.getElementById('about-text').textContent = d.story;
+  document.getElementById('about-img').src = d.gallery[0];
+
+  // Amenities
+  document.getElementById('amenities-eyebrow').textContent = g(amen,'eyebrow','FACILITIES');
+  document.getElementById('amenities-title').textContent = g(amen,'title','Everything the evening needs');
+  document.getElementById('amenities-grid').innerHTML = d.amenities.map(a => `
+    <div class="amenity">${svgWrap(icons[a.icon]||icons.guests)}<span>${a.label}</span></div>
+  `).join('');
+
+  // Gallery
+  document.getElementById('gallery-eyebrow').textContent = g(gal,'eyebrow','GALLERY');
+  document.getElementById('gallery-title').textContent = g(gal,'title','A hall built for the biggest nights');
+  document.getElementById('gallery-grid').innerHTML = d.gallery.map(src => `
+    <a href="${src}" target="_blank" rel="noopener"><img src="${src}" alt="${d.name} venue photo" loading="lazy"></a>
+  `).join('');
+
+  // Packages
+  document.getElementById('packages-eyebrow').textContent = g(pkg,'eyebrow','PACKAGES');
+  document.getElementById('packages-title').textContent = g(pkg,'title','Choose your evening');
+  document.getElementById('pkg-grid').innerHTML = d.packages.map(p => `
+    <div class="pkg-card ${p.featured ? 'featured':''}">
+      <div class="note ${p.featured ? 'ribbon':''}">${p.note}</div>
+      <h3>${p.tier}</h3>
+      <div class="price">${p.price}</div>
+      <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+    </div>
+  `).join('');
+
+  // Reviews
+  document.getElementById('reviews-eyebrow').textContent = g(rev,'eyebrow','GUEST REVIEWS');
+  document.getElementById('review-title').textContent = g(rev,'titleTemplate','Loved by {count}+ families').replace('{count}', d.reviewCount);
+  document.getElementById('test-grid').innerHTML = d.testimonials.map(t => `
+    <div class="test-card">
+      <span class="stars" style="color:var(--gold);">${stars(t.rating)}</span>
+      <p>"${t.text}"</p>
+      <div class="name">${t.name}</div>
+    </div>
+  `).join('');
+
+  // Location
+  document.getElementById('visit-eyebrow').textContent = g(visit,'eyebrow','VISIT US');
+  document.getElementById('loc-title').textContent = g(visit,'title','Plan your visit');
+  document.getElementById('visit-address-label').textContent = g(visit,'addressLabel','ADDRESS');
+  document.getElementById('visit-hours-label').textContent = g(visit,'hoursLabel','HOURS');
+  document.getElementById('visit-phone-label').textContent = g(visit,'phoneLabel','PHONE');
+  document.getElementById('loc-directions').textContent = g(visit,'directionsCta','Get Directions');
+  document.getElementById('loc-address').textContent = d.addressLine + (d.locatedIn ? ` · Located in ${d.locatedIn}` : '');
+  document.getElementById('loc-hours').textContent = d.hoursLine;
+  document.getElementById('loc-phone').textContent = d.phoneDisplay;
+  document.getElementById('loc-directions').href = d.mapsUrl;
+  document.getElementById('loc-map').href = d.mapsUrl;
+
+  // Enquiry
+  document.getElementById('enquiry-eyebrow').textContent = g(enq,'eyebrow','ENQUIRE');
+  document.getElementById('enquiry-title').textContent = g(enq,'title','Check your date');
+  document.getElementById('enquiry-subtext').textContent = g(enq,'subtext',"Tell us about your event and we'll reply on WhatsApp within the day.");
+  document.getElementById('f-name').placeholder = g(enq,'namePlaceholder','Your name');
+  document.getElementById('f-date').placeholder = g(enq,'datePlaceholder','Event date');
+  document.getElementById('f-guests').placeholder = g(enq,'guestsPlaceholder','Guest count');
+  document.getElementById('f-phone').placeholder = g(enq,'phonePlaceholder','Phone number');
+  document.getElementById('f-msg').placeholder = g(enq,'msgPlaceholder','Tell us about your event (mehndi, walima, corporate...)');
+  document.getElementById('f-submit').textContent = g(enq,'submitCta','Send Enquiry on WhatsApp');
+
+  // Inquiry form -> WhatsApp
+  document.getElementById('f-submit').addEventListener('click', function(e){
+    e.preventDefault();
+    const name = document.getElementById('f-name').value || 'there';
+    const date = document.getElementById('f-date').value || 'not specified';
+    const guests = document.getElementById('f-guests').value || 'not specified';
+    const phone = document.getElementById('f-phone').value || 'not provided';
+    const msg = document.getElementById('f-msg').value || '';
+    const text = `Hi, I'm ${name}. I'd like to enquire about ${d.name}.\nEvent date: ${date}\nGuests: ${guests}\nPhone: ${phone}\n${msg}`;
+    window.open(waLink(d.whatsappNumber, text), '_blank');
+  });
+
+  // Footer
+  document.getElementById('foot-brand').textContent = d.name;
+  document.getElementById('foot-tagline').textContent = d.tagline;
+  document.getElementById('foot-disclaimer').innerHTML = g(foot,'disclaimerLine1','Prototype built for presentation purposes only — not a live production website.') + '<br>' + g(foot,'disclaimerLine2','The full version includes your own domain, a content-editable admin, booking calendar and WhatsApp lead automation.');
+
+  // Top bar solid-on-scroll + subtle hero parallax (skipped if the visitor prefers reduced motion)
+  const topbar = document.getElementById('topbar');
+  const heroImg = document.getElementById('hero-img');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    topbar.classList.toggle('solid', y > 40);
+    if(!reduceMotion && y < window.innerHeight){
+      heroImg.style.transform = `translateY(${y * 0.15}px) scale(1.06)`;
+    }
+  }, { passive:true });
+})();
+</script>
+
+</body>
+</html>
