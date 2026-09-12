@@ -1,4 +1,3 @@
-```js
 /* ============================================================
    HALL_DATA — the ONLY file you edit for a new client.
    Copy this file, change the values below, keep index.html untouched.
