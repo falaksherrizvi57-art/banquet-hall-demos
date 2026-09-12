@@ -73,6 +73,11 @@
     content:""; position:absolute; inset:0;
     background:radial-gradient(ellipse at center, rgba(42,11,19,.35) 0%, rgba(42,11,19,.92) 78%);
   }
+  .hero::after{
+    content:""; position:absolute; inset:0; opacity:.05; mix-blend-mode:overlay; pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .hero-img{ will-change:transform; }
   .hero-content{ position:relative; z-index:2; text-align:center; padding:0 24px; }
 
   .arch-frame{ width:min(560px,86vw); margin:0 auto 8px; }
@@ -126,11 +131,39 @@
     opacity:.6;
   }
 
+  /* ---------- Trust bar ---------- */
+  .trust-bar{ background:var(--ivory); border-bottom:1px solid rgba(74,20,32,.08); padding:38px 0; }
+  .trust-grid{ display:flex; justify-content:center; gap:70px; flex-wrap:wrap; text-align:center; }
+  .trust-item .value{ font-family:'Cormorant Garamond',serif; font-size:36px; color:var(--maroon); display:block; line-height:1; }
+  .trust-item .label{ font-size:13px; color:#7a6650; letter-spacing:.03em; margin-top:6px; display:block; }
+  @media (max-width:600px){ .trust-grid{ gap:34px 46px; } }
+
+  /* ---------- Floating WhatsApp ---------- */
+  .floating-wa{
+    position:fixed; right:22px; bottom:22px; z-index:80; width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg, var(--gold), var(--gold-light));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 26px rgba(0,0,0,.3); transition:transform .25s ease;
+  }
+  .floating-wa:hover{ transform:translateY(-3px) scale(1.05); }
+  .floating-wa svg{ width:25px; height:25px; }
+  .floating-wa::before{
+    content:""; position:absolute; inset:-6px; border-radius:50%; border:1px solid var(--gold);
+    opacity:.5; animation:pulseRing 2.6s ease-out infinite;
+  }
+  @keyframes pulseRing{ 0%{ transform:scale(.88); opacity:.55; } 70%{ transform:scale(1.35); opacity:0; } 100%{ opacity:0; } }
+
   /* ---------- Section shell ---------- */
   section{ padding:96px 0; }
   .section-ivory{ background:var(--ivory); }
   .section-dark{ background:var(--maroon-dark); color:var(--ivory); }
-  .eyebrow-rule{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+  .eyebrow-rule{ display:flex; align-items:center; gap:14px; margin-bottom:18px; position:relative; padding-left:15px; }
+  .eyebrow-rule::before{
+    content:""; position:absolute; left:0; top:50%; width:6px; height:6px;
+    background:var(--gold); transform:translateY(-50%) rotate(45deg);
+  }
+  .eyebrow-rule.center{ justify-content:center; padding-left:0; }
+  .eyebrow-rule.center::before{ display:none; }
   .eyebrow-rule .line{ height:1px; width:44px; background:var(--gold); position:relative; overflow:hidden; }
   .eyebrow-rule .line::after{
     content:""; position:absolute; inset:0; width:40%;
@@ -185,9 +218,16 @@
     position:relative; background:#fff; padding:44px 30px 34px;
     clip-path:polygon(0 22px, 50% 0, 100% 22px, 100% 100%, 0 100%);
     border:1px solid rgba(74,20,32,.12); text-align:center;
+    box-shadow:inset 0 0 0 1px rgba(203,161,53,.18);
   }
-  .pkg-card.featured{ background:var(--maroon); color:var(--ivory); transform:translateY(-14px); box-shadow:0 24px 44px rgba(42,11,19,.28); }
+  .pkg-card.featured{ background:var(--maroon); color:var(--ivory); transform:translateY(-14px); box-shadow:0 24px 44px rgba(42,11,19,.28), inset 0 0 0 1px rgba(203,161,53,.35); }
   .pkg-card .note{ font-size:12px; letter-spacing:.1em; color:var(--gold); text-transform:uppercase; }
+  .pkg-card .note.ribbon{
+    position:absolute; top:22px; right:-36px; width:150px; text-align:center;
+    transform:rotate(40deg); background:linear-gradient(135deg, var(--teal), #163f3d);
+    color:var(--gold-light); padding:6px 0; letter-spacing:.08em; font-size:11px;
+    box-shadow:0 6px 16px rgba(0,0,0,.28);
+  }
   .pkg-card.featured .note{ color:var(--gold-light); }
   .pkg-card h3{ font-size:30px; margin:8px 0 2px; }
   .pkg-card .price{ font-size:16px; color:#6b5240; margin-bottom:20px; }
@@ -282,6 +322,10 @@
   <div class="scroll-cue"></div>
 </section>
 
+<section class="trust-bar">
+  <div class="wrap trust-grid" id="trust-grid"></div>
+</section>
+
 <section class="section-ivory" id="about">
   <div class="wrap about-grid">
     <div>
@@ -351,7 +395,7 @@
 <section class="section-ivory">
   <div class="wrap">
     <div class="inquiry-box">
-      <div class="eyebrow-rule" style="justify-content:center;"><div class="line"></div><span id="enquiry-eyebrow"></span></div>
+      <div class="eyebrow-rule center" style="justify-content:center;"><div class="line"></div><span id="enquiry-eyebrow"></span></div>
       <h2 class="title" style="margin:0 auto 8px;" id="enquiry-title"></h2>
       <p id="enquiry-subtext"></p>
       <div class="field-row">
@@ -376,7 +420,143 @@
   </div>
 </footer>
 
-<script src="data.js"></script>
+<a class="floating-wa" id="floating-wa" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none"><path d="M20.5 3.5A10 10 0 0 0 3.8 16.3L2 22l5.9-1.7A10 10 0 1 0 20.5 3.5z" stroke="none" fill="none"/><path d="M17.6 14.4c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-2-1.8-2.3-.2-.3 0-.5.1-.6.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.5.3-.7.3-1.3.2-1.5 0-.1-.3-.2-.6-.3z" fill="var(--maroon-dark)"/></svg>
+</a>
+
+<script>
+/* ============================================================
+   HALL_DATA — the ONLY file you edit for a new client.
+   Copy this file, change the values below, keep index.html untouched.
+   Every field is explained with a comment.
+   ============================================================ */
+
+window.HALL_DATA = {
+
+  // ---- Identity ----
+  name: "Grand Sapphire Event Complex",
+  nameUrdu: "",                        // none listed on this business's Maps profile
+  tagline: "Where Every Occasion Becomes An Event",
+
+  // ---- Google-style reputation strip (pulled from their Maps listing) ----
+  rating: 4.3,
+  reviewCount: 185,
+
+  // ---- Contact ----
+  phoneDisplay: "+92 321 0829829",
+  phoneLink: "+923210829829",
+  whatsappNumber: "923210829829",
+
+  // ---- Location ----
+  addressLine: "805 Ravi Block, Allama Iqbal Town, Multan Road, Lahore",
+  locatedIn: "",                       // nothing listed for this venue
+  hoursLine: "Open 24 hours",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Grand+Sapphire+Event+Complex+Allama+Iqbal+Town+Lahore",
+
+  // ---- Hero background image ----
+  heroImage: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=1600&auto=format&fit=crop",
+
+  // ---- Short story / about paragraph ----
+  story: "Grand Sapphire Event Complex is Multan Road's go-to address for weddings and large celebrations, open around the clock to work around your family's schedule, not the other way round. A complex built to host everything from an intimate mehndi to a full walima with hundreds of guests.",
+
+  // ---- Gallery images ----
+  gallery: [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1470309864661-68328b2cd0a5?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1533895328492-8bb1eab48f24?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1550005809-91ad75fb315f?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1000&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1478146059778-26028b07395a?q=80&w=1000&auto=format&fit=crop"
+  ],
+
+  // ---- Trust strip shown right under the hero — pick whatever proves credibility fastest ----
+  heroStats: [
+    { value: "4.3★", label: "Average rating" },
+    { value: "185+", label: "Celebrations hosted" },
+    { value: "24/7", label: "Open every day" }
+  ],
+
+  // ---- Amenities ----
+  amenities: [
+    { icon: "guests",    label: "Up to 700 Guests" },
+    { icon: "parking",   label: "Ample Parking" },
+    { icon: "power",     label: "Backup Generator" },
+    { icon: "catering",  label: "In-house Catering" },
+    { icon: "sound",     label: "Sound & Stage Setup" },
+    { icon: "ac",        label: "Fully Air-Conditioned" }
+  ],
+
+  // ---- Packages / pricing tiers ----
+  packages: [
+    {
+      tier: "Silver",
+      price: "Rs 1,900 / head",
+      note: "Starting from",
+      features: ["Elegant hall décor", "3-course menu", "Basic sound system", "Seating for up to 350"]
+    },
+    {
+      tier: "Gold",
+      price: "Rs 2,900 / head",
+      note: "Most booked",
+      features: ["Premium stage & floral décor", "5-course menu + live counters", "Full sound & lighting", "Seating for up to 500"],
+      featured: true
+    },
+    {
+      tier: "Platinum",
+      price: "Rs 4,300 / head",
+      note: "Full luxury",
+      features: ["Signature bridal stage design", "Unlimited live counters", "Dedicated event coordinator", "Seating for up to 700"]
+    }
+  ],
+
+  // ---- Testimonials ----
+  testimonials: [
+    { name: "Kamran S.", rating: 5, text: "Booked for a walima at short notice and they still pulled it off well — being open round the clock made planning so much easier." },
+    { name: "Nadia F.", rating: 4, text: "Big, well-kept complex with enough parking for a large guest list. Staff were helpful throughout the event." },
+    { name: "Ali H.", rating: 4, text: "Good value for the space you get. Décor team did a nice job with the stage for our mehndi." }
+  ],
+
+  // ---- All on-page wording lives here. Change any of these per client without touching index.html.
+  copy: {
+    nav: { about: "About", gallery: "Gallery", packages: "Packages", reviews: "Reviews", visit: "Visit" },
+    hero: {
+      ctaPrimary: "Enquire on WhatsApp",
+      ctaSecondary: "View Gallery",
+      whatsappMessageTemplate: "Hi, I'd like to enquire about booking {name}."
+    },
+    about: { eyebrow: "OUR STORY", title: "A legacy of grand celebrations" },
+    amenities: { eyebrow: "FACILITIES", title: "Everything the evening needs" },
+    gallery: { eyebrow: "GALLERY", title: "A hall built for the biggest nights" },
+    packages: { eyebrow: "PACKAGES", title: "Choose your evening" },
+    reviews: { eyebrow: "GUEST REVIEWS", titleTemplate: "Loved by {count}+ families" },
+    visit: {
+      eyebrow: "VISIT US",
+      title: "Plan your visit",
+      addressLabel: "ADDRESS",
+      hoursLabel: "HOURS",
+      phoneLabel: "PHONE",
+      directionsCta: "Get Directions"
+    },
+    enquiry: {
+      eyebrow: "ENQUIRE",
+      title: "Check your date",
+      subtext: "Tell us about your event and we'll reply on WhatsApp within the day.",
+      namePlaceholder: "Your name",
+      datePlaceholder: "Event date",
+      guestsPlaceholder: "Guest count",
+      phonePlaceholder: "Phone number",
+      msgPlaceholder: "Tell us about your event (mehndi, walima, corporate...)",
+      submitCta: "Send Enquiry on WhatsApp"
+    },
+    footer: {
+      disclaimerLine1: "Prototype built for presentation purposes only — not a live production website.",
+      disclaimerLine2: "The full version includes your own domain, a content-editable admin, booking calendar and WhatsApp lead automation."
+    }
+  }
+
+};
+
+</script>
 <script>
 (function(){
   const d = window.HALL_DATA;
@@ -431,6 +611,14 @@
   document.getElementById('hero-cta-secondary').textContent = g(hero,'ctaSecondary','View Gallery');
   document.getElementById('hero-whatsapp').href = waLink(d.whatsappNumber, g(hero,'whatsappMessageTemplate', `Hi, I'd like to enquire about booking ${d.name}.`).replace('{name}', d.name));
 
+  // Trust bar
+  document.getElementById('trust-grid').innerHTML = (d.heroStats||[]).map(s => `
+    <div class="trust-item"><span class="value">${s.value}</span><span class="label">${s.label}</span></div>
+  `).join('');
+
+  // Floating WhatsApp button
+  document.getElementById('floating-wa').href = waLink(d.whatsappNumber, g(hero,'whatsappMessageTemplate', `Hi, I'd like to enquire about booking ${d.name}.`).replace('{name}', d.name));
+
   // About
   document.getElementById('about-eyebrow').textContent = g(about,'eyebrow','OUR STORY');
   document.getElementById('about-title').textContent = g(about,'title','A legacy of grand celebrations');
@@ -456,7 +644,7 @@
   document.getElementById('packages-title').textContent = g(pkg,'title','Choose your evening');
   document.getElementById('pkg-grid').innerHTML = d.packages.map(p => `
     <div class="pkg-card ${p.featured ? 'featured':''}">
-      <div class="note">${p.note}</div>
+      <div class="note ${p.featured ? 'ribbon':''}">${p.note}</div>
       <h3>${p.tier}</h3>
       <div class="price">${p.price}</div>
       <ul>${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
@@ -515,11 +703,17 @@
   document.getElementById('foot-tagline').textContent = d.tagline;
   document.getElementById('foot-disclaimer').innerHTML = g(foot,'disclaimerLine1','Prototype built for presentation purposes only — not a live production website.') + '<br>' + g(foot,'disclaimerLine2','The full version includes your own domain, a content-editable admin, booking calendar and WhatsApp lead automation.');
 
-  // Top bar solid-on-scroll
+  // Top bar solid-on-scroll + subtle hero parallax (skipped if the visitor prefers reduced motion)
   const topbar = document.getElementById('topbar');
+  const heroImg = document.getElementById('hero-img');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   window.addEventListener('scroll', () => {
-    topbar.classList.toggle('solid', window.scrollY > 40);
-  });
+    const y = window.scrollY;
+    topbar.classList.toggle('solid', y > 40);
+    if(!reduceMotion && y < window.innerHeight){
+      heroImg.style.transform = `translateY(${y * 0.15}px) scale(1.06)`;
+    }
+  }, { passive:true });
 })();
 </script>
 
